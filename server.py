@@ -19,12 +19,6 @@ import config
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.secret_key = config.SECRET_KEY
 
-# Debug info
-print(f"Starting server...")
-print(f"IS_VERCEL: {config.IS_VERCEL}")
-print(f"DB_PATH: {config.DB_PATH}")
-print(f"GENERATED_DIR: {config.GENERATED_DIR}")
-
 # ---------------------------------------------------------------------------
 # Database helper
 # ---------------------------------------------------------------------------
