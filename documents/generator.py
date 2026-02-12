@@ -2,8 +2,14 @@ from docx import Document
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import os
+
 class DocumentGenerator:
     def __init__(self, templates_dir="documents/templates", output_dir="documents/generated"):
+        # Force /tmp on Vercel to ensure writable path
+        if os.environ.get("VERCEL"):
+            output_dir = "/tmp/generated_docs"
+            
         self.templates_dir = Path(templates_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
