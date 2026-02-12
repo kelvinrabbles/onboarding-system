@@ -171,7 +171,10 @@ def api_generate_docs(cid):
         return jsonify({"error": "Not found"}), 404
 
     try:
-        gen = DocumentGenerator()
+        gen = DocumentGenerator(
+            templates_dir=config.TEMPLATES_DIR,
+            output_dir=config.GENERATED_DIR
+        )
         consultant_data = {
             "name": c.name,
             "email": c.email,
