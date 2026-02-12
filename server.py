@@ -97,6 +97,17 @@ def api_summary():
         "complete": summary["complete"],
     })
 
+@app.route("/api/debug")
+def api_debug():
+    gen = DocumentGenerator()
+    return jsonify({
+        "IS_VERCEL": config.IS_VERCEL,
+        "CONFIG_GENERATED_DIR": config.GENERATED_DIR,
+        "GENERATOR_OUTPUT_DIR": str(gen.output_dir),
+        "CWD": os.getcwd(),
+        "VERCEL_ENV": os.environ.get("VERCEL")
+    })
+
 
 # ---------------------------------------------------------------------------
 # API — Consultants (list / create)
