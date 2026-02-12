@@ -391,16 +391,19 @@ async function renderDetail(id) {
           ${!data.documents.length ? `<button class="btn btn-ghost btn-sm" onclick="addStandardDocs(${c.id})">+ Add Docs</button>` : ''}
         </div>
         <div class="doc-list">
-          ${data.documents.length ? data.documents.map(d => `
+        <div class="doc-list">
+          ${data.documents.length ? data.documents.map(d => {
+    const fname = d.file_path ? d.file_path.split(/[\\/]/).pop() : "";
+    return `
             <div class="doc-item">
               <div class="doc-check ${d.status === 'Completed' ? 'done' : ''}" onclick="toggleDoc(${d.id}, '${d.status}')" title="Mark ${d.status === 'Completed' ? 'pending' : 'complete'}"></div>
               <div style="flex:1">
                 <div class="doc-name">${d.document_type}</div>
-                ${d.file_path ? `<div class="doc-path">📁 ${d.file_path}</div>` : ''}
+                ${d.file_path ? `<a href="/api/download/${fname}" class="doc-link" target="_blank" style="display:block;font-size:0.85rem;color:var(--primary);text-decoration:none;margin-top:2px">⬇️ Download File</a>` : ''}
               </div>
               ${badge(d.status)}
             </div>
-          `).join('') : `<div class="empty-state"><p>No documents tracked yet.</p><button class="btn btn-primary btn-sm" onclick="addStandardDocs(${c.id})">Add Standard Documents</button></div>`}
+          `}).join('') : `<div class="empty-state"><p>No documents tracked yet.</p><button class="btn btn-primary btn-sm" onclick="addStandardDocs(${c.id})">Add Standard Documents</button></div>`}
         </div>
       </div>
 

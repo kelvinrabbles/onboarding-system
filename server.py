@@ -19,6 +19,14 @@ import config
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.secret_key = config.SECRET_KEY
 
+@app.route("/api/download/<path:filename>")
+def download_file(filename):
+    """Serve generated documents from the configured output directory"""
+    try:
+        return send_from_directory(config.GENERATED_DIR, filename, as_attachment=True)
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
+
 # ---------------------------------------------------------------------------
 # Database helper
 # ---------------------------------------------------------------------------
