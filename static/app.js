@@ -431,8 +431,22 @@ async function renderDetail(id) {
 // ── Detail actions ─────────────────────────────────────────────────
 async function generateDocs(id) {
   try {
-    await api.post(`/api/consultants/${id}/generate-docs`);
+    const res = await api.post(`/api/consultants/${id}/generate-docs`);
     toast("Documents generated successfully!");
+
+    // Auto-download files (for serverless compatibility)
+    if (res.files && res.files.length) {
+      res.files.forEach(f => {
+        const link = document.createElement("a");
+        link.href = `data:${f.type};base64,${f.data}`;
+        link.download = f.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast(`Downloading ${f.name}...`, "info");
+      });
+    }
+
     renderDetail(id);
     refreshSidebarStats();
   } catch (e) { toast(e.message, "error"); }
