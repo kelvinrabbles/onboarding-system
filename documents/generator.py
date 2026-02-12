@@ -6,13 +6,21 @@ import os
 
 class DocumentGenerator:
     def __init__(self, templates_dir="documents/templates", output_dir="documents/generated"):
-        # Force /tmp on Vercel to ensure writable path
-        if os.environ.get("VERCEL"):
-            output_dir = "/tmp/generated_docs"
-            
         self.templates_dir = Path(templates_dir)
         self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Try to create directory and verify writability
+        try:
+            self.output_dir.mkdir(parents=True, exist_ok=True)
+            # Test write permission
+            test_path = self.output_dir / ".write_test"
+            with open(test_path, "w") as f:
+                f.write("test")
+            test_path.unlink()
+        except (OSError, PermissionError):
+            # Fallback to /tmp if read-only or permission denied
+            self.output_dir = Path("/tmp/generated_docs")
+            self.output_dir.mkdir(parents=True, exist_ok=True)
     
     def generate_offer_letter(self, consultant_data):
         """Generate personalized offer letter from Solutions template"""
